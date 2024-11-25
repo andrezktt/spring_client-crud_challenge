@@ -1,16 +1,23 @@
 package com.andrezktt.client_crud.dto;
 
 import com.andrezktt.client_crud.entities.Client;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Positive;
 
 import java.time.LocalDate;
 
 public class ClientDTO {
 
     private Long id;
+    @NotBlank(message = "Campo requerido.")
     private String name;
     private String cpf;
+    @Positive(message = "O valor do campo deve ser positivo")
     private Double income;
+    @PastOrPresent(message = "Insira uma data de nascimento válida.")
     private LocalDate birthDate;
+    @Positive(message = "O valor do campo deve ser positivo")
     private Integer children;
 
     public ClientDTO() {
