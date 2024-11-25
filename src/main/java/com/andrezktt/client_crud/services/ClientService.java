@@ -1,6 +1,7 @@
 package com.andrezktt.client_crud.services;
 
 import com.andrezktt.client_crud.dto.ClientDTO;
+import com.andrezktt.client_crud.entities.Client;
 import com.andrezktt.client_crud.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,5 +23,17 @@ public class ClientService {
     @Transactional(readOnly = true)
     public ClientDTO findById(Long id) {
         return new ClientDTO(repository.findById(id).orElseThrow());
+    }
+
+    @Transactional
+    public ClientDTO insert(ClientDTO dto) {
+        Client entity = new Client();
+        entity.setName(dto.getName());
+        entity.setCpf(dto.getCpf());
+        entity.setIncome(dto.getIncome());
+        entity.setBirthDate(dto.getBirthDate());
+        entity.setChildren(dto.getChildren());
+        entity = repository.save(entity);
+        return new ClientDTO(entity);
     }
 }
