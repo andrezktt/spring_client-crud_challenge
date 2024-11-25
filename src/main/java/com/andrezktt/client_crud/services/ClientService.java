@@ -2,7 +2,9 @@ package com.andrezktt.client_crud.services;
 
 import com.andrezktt.client_crud.dto.ClientDTO;
 import com.andrezktt.client_crud.entities.Client;
+import com.andrezktt.client_crud.exceptions.ResourceNotFoundException;
 import com.andrezktt.client_crud.repositories.ClientRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +25,7 @@ public class ClientService {
 
     @Transactional(readOnly = true)
     public ClientDTO findById(Long id) {
-        return new ClientDTO(repository.findById(id).orElseThrow());
+        return new ClientDTO(repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado!")));
     }
 
     @Transactional
@@ -36,15 +38,23 @@ public class ClientService {
 
     @Transactional
     public ClientDTO update(Long id, ClientDTO dto) {
-        Client entity = repository.getReferenceById(id);
-        copyDtoToEntity(dto, entity);
-        entity = repository.save(entity);
-        return new ClientDTO(entity);
+        try {
+            Client entity = repository.getReferenceById(id);
+            copyDtoToEntity(dto, entity);
+            entity = repository.save(entity);
+            return new ClientDTO(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Cliente não encontrado.");
+        }
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
     public void delete(Long id) {
-        repository.deleteById(id);
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Cliente não encontrado.");
+        } else {
+            repository.deleteById(id);
+        }
     }
 
     private void copyDtoToEntity(ClientDTO dto, Client entity) {
