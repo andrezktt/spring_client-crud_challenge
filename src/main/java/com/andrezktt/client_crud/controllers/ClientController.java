@@ -1,6 +1,6 @@
 package com.andrezktt.client_crud.controllers;
 
-import com.andrezktt.client_crud.entities.Client;
+import com.andrezktt.client_crud.dto.ClientDTO;
 import com.andrezktt.client_crud.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,7 +18,7 @@ public class ClientController {
     private ClientService service;
 
     @GetMapping
-    public ResponseEntity<Page<Client>> findAll(Pageable pageable) {
+    public ResponseEntity<Page<ClientDTO>> findAll(Pageable pageable) {
         return ResponseEntity.ok().body(service.findAll(pageable));
     }
 }

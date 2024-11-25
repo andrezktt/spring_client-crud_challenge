@@ -1,5 +1,6 @@
 package com.andrezktt.client_crud.services;
 
+import com.andrezktt.client_crud.dto.ClientDTO;
 import com.andrezktt.client_crud.entities.Client;
 import com.andrezktt.client_crud.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ public class ClientService {
     private ClientRepository repository;
 
     @Transactional(readOnly = true)
-    public Page<Client> findAll(Pageable pageable) {
-        return repository.findAll(pageable).map(e -> new Client());
+    public Page<ClientDTO> findAll(Pageable pageable) {
+        return repository.findAll(pageable).map(e -> new ClientDTO(e));
     }
 }
